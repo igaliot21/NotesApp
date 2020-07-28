@@ -88,6 +88,7 @@ namespace NotesApp.Model
             this.notebook = Notebook;
             this.notebookid = Notebook.Id;
             this.createdtime = DateTime.Now;
+            this.updatedtime = DateTime.Now;
         }
         private void OnPropertyChange(string propertyName)
         {
