@@ -18,16 +18,15 @@ namespace NotesApp.ViewModel.Commands
         }
         public bool CanExecute(object parameter)
         {
-            var selectedNotebook = parameter as Notebook;
-            if (selectedNotebook != null) return true;
-            else return false;
+            return true;
         }
 
         public void Execute(object parameter)
         {
-            // var selectedNotebook = parameter as Notebook;
-            VM.CreateNote(parameter as Notebook);
-            //TODO: New Note functionality
+            Notebook selectedNotebook = parameter as Notebook;
+            if (selectedNotebook != null)
+                VM.CreateNote(selectedNotebook);
+            
         }
     }
 }

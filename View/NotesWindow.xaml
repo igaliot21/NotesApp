@@ -5,12 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NotesApp.View"
         xmlns:vm="clr-namespace:NotesApp.ViewModel"
+        xmlns:uc="clr-namespace:NotesApp.View.UserControls"
         mc:Ignorable="d"
-        Title="Notes" Height="450" Width="800">
+        Title="Notes" Height="480" Width="600">
     <Window.Resources>
         <vm:NotesVM x:Key="NotesVM" />
     </Window.Resources>
-    
+
     <DockPanel DataContext="{StaticResource NotesVM}">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
@@ -23,8 +24,58 @@
                 <MenuItem Header="Exit" Click="MenuItem_Click"/>
             </MenuItem>
         </Menu>
+        <StatusBar DockPanel.Dock="Bottom" >
+            <StatusBarItem>
+                <TextBlock x:Name="txtStatus" />
+            </StatusBarItem>
+        </StatusBar>
+        <ListView Width="140" DockPanel.Dock="Left" 
+                  Background="CadetBlue"
+                  ItemsSource="{Binding Notebooks}"
+                  SelectedItem="{Binding SelectedNotebook, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <uc:Notebook DisplayNotebook="{Binding}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <ListView Width="140" DockPanel.Dock="Left" 
+                  Background="AntiqueWhite"
+                  ItemsSource="{Binding Notes}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <uc:NoteControl Note="{Binding}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar>
+                <ToggleButton x:Name="toolBarBtnSpeech" Content="Speech" Click="toolBarBtnSpeech_Click" />
+                <Separator />
+                <ToggleButton x:Name="toolBarBtnBold" Click="toolBarBtnBold_Click">
+                    <TextBlock Text="B" FontWeight="Bold" />
+                </ToggleButton>
+                <ToggleButton x:Name="toolBarBtnItalic" Click="toolBarBtnItalic_Click">
+                    <TextBlock Text="I" FontStyle="Italic" />
+                </ToggleButton>
+                <ToggleButton x:Name="toolBarBtnUnderline" Click="toolBarBtnUnderline_Click">
+                    <TextBlock Text="U" TextDecorations="Underline"  />
+                </ToggleButton>
+                <Separator />
+                <ComboBox x:Name="cmbFontFamily" Width="100" 
+                          SelectionChanged="cmbFontFamily_SelectionChanged"/>
+                <ComboBox x:Name="cmbFontSize" Width="50" IsEditable="True" 
+                          TextBoxBase.SelectionChanged="cmbFontSize_SelectionChanged" />
+            </ToolBar>
+        </ToolBarTray>
         <Grid>
-            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="77*"/>
+                <ColumnDefinition Width="235*"/>
+            </Grid.ColumnDefinitions>
+            <RichTextBox x:Name="richTxtContent" 
+                         TextChanged="richTxtContent_TextChanged"
+                         SelectionChanged="richTxtContent_SelectionChanged" Grid.ColumnSpan="2"/>
         </Grid>
     </DockPanel>
 </Window>
