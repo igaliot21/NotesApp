@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NotesApp.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Speech.Recognition;
@@ -24,9 +25,13 @@ namespace NotesApp.View
     public partial class NotesWindow : Window
     {
         SpeechRecognitionEngine speechRecognizer;
+        NotesVM notesVM;
         public NotesWindow()
         {
+
             InitializeComponent();
+            notesVM = new NotesVM();
+            mainContainer.DataContext = notesVM;
             /*
             var currentCulture = from r in SpeechRecognitionEngine.InstalledRecognizers()
                                  where r.Culture.Equals(Thread.CurrentThread.CurrentCulture)
@@ -45,6 +50,19 @@ namespace NotesApp.View
 
             cmbFontFamily.ItemsSource = Fonts.SystemFontFamilies.OrderBy(f => f.Source);
             cmbFontSize.ItemsSource = new List<double>() { 8, 9, 10, 11, 12, 14, 16, 28, 48, 72 };
+
+        }
+
+        
+        protected override void OnActivated(EventArgs e)
+        {
+            if (App.UserId == 0)
+            {
+                LoginWindow loginWindow = new LoginWindow();
+                loginWindow.ShowDialog();
+                notesVM.ReadNotebooks();
+            }
+            base.OnActivated(e);
 
         }
 

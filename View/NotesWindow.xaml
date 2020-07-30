@@ -12,7 +12,7 @@
         <vm:NotesVM x:Key="NotesVM" />
     </Window.Resources>
 
-    <DockPanel DataContext="{StaticResource NotesVM}">
+    <DockPanel x:Name="mainContainer">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
                 <MenuItem Header="New Notebook" 
@@ -25,6 +25,10 @@
             </MenuItem>
         </Menu>
         <StatusBar DockPanel.Dock="Bottom" >
+            <StatusBarItem>
+                <TextBlock x:Name="txtUserName" Text="{Binding UserName, Mode=TwoWay}" />
+            </StatusBarItem>
+            <Separator />
             <StatusBarItem>
                 <TextBlock x:Name="txtStatus" />
             </StatusBarItem>

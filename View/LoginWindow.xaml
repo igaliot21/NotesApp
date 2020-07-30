@@ -4,9 +4,52 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NotesApp.View"
+        xmlns:vm="clr-namespace:NotesApp.ViewModel"
         mc:Ignorable="d"
-        Title="Login" Height="450" Width="800">
-    <Grid>
-        
+        Title="Login" Height="320" Width="250">
+    <Window.Resources>
+        <vm:LoginVM x:Key="login" />
+    </Window.Resources>
+    <Grid x:Name="containerGrid">   
+        <StackPanel x:Name="loginStackPanel"
+                    Margin="20, 0" 
+                    Visibility="Collapsed"                    
+                    VerticalAlignment="Center">
+            <Label Content="Email/Login:" FontSize="10"/>
+            <TextBox Text="{Binding User.Login, Mode=TwoWay}" />
+            <Label Content="Password:" FontSize="10"/>
+            <TextBox Text="{Binding User.Password, Mode=TwoWay}" />
+            <Button Content="Login" 
+                    Command="{Binding LoginCommand}"
+                    CommandParameter="{Binding User}"
+                    Margin="0 15 0 0"/>
+            <Button x:Name="btnLoginReg" Content="Register" 
+                    Width="100" HorizontalAlignment="Right"
+                    Click="btnLoginReg_Click"
+                    Margin="0 20 0 0"/>
+
+        </StackPanel>
+        <StackPanel x:Name="registerStackPanel"
+                    Margin="20, 0" 
+                    VerticalAlignment="Center">
+            <Label Content="Name:" FontSize="10"/>
+            <TextBox Text="{Binding User.Name, Mode=TwoWay}" />
+            <Label Content="Lastname:" FontSize="10"/>
+            <TextBox  Text="{Binding User.LastName, Mode=TwoWay}" />
+            <Label Content="Email/Login:" FontSize="10"/>
+            <TextBox  Text="{Binding User.Login, Mode=TwoWay}" />
+            <Label Content="Password:" FontSize="10"/>
+            <TextBox Text="{Binding User.Password, Mode=TwoWay}" />
+            <Button Content="Register" 
+                    Command="{Binding RegisterCommand}"
+                    CommandParameter="{Binding User}"
+                    Margin="0 15 0 0"/>
+
+            <Button x:Name="btnRegLogin" Content="Login" 
+                    Width="100" HorizontalAlignment="Right"
+                    Click="btnRegLogin_Click"
+                    Margin="0 20 0 0"/>            
+           
+        </StackPanel>
     </Grid>
 </Window>

@@ -13,6 +13,17 @@ namespace NotesApp.ViewModel
     public class NotesVM
     {
         private NoteAppContext context;
+        private string username;
+
+        public string UserName
+        {
+            get { return username; }
+            set {
+                username = value;
+                ReadNotebooks();
+            }
+        }
+
 
         public ObservableCollection<Notebook> Notebooks { get; set; }
 
@@ -42,11 +53,14 @@ namespace NotesApp.ViewModel
             ReadNotes();
         }
         public void CreateNotebook(){
-            var currentUser = context.Users.Where(u => u.Id == 1).First(); //new User("Nombre", "Apellido", "Login", "pass"); // test only
-            var newNotebook = new Notebook("New Notebook", currentUser);
-            context.Notebooks.Add(newNotebook);
-            context.SaveChanges();
-            ReadNotebooks();
+            if (App.UserId != 0)
+            {
+                var currentUser = context.Users.Where(u => u.Id == App.UserId).First(); //new User("Nombre", "Apellido", "Login", "pass"); // test only
+                var newNotebook = new Notebook("New Notebook", currentUser);
+                context.Notebooks.Add(newNotebook);
+                context.SaveChanges();
+                ReadNotebooks();
+            }
         }
         public void CreateNote(Notebook Notebook){
             var newNote = new Note("New Note", "FileLocation", Notebook);
@@ -55,9 +69,14 @@ namespace NotesApp.ViewModel
             ReadNotes();
         }
         public void ReadNotebooks(){
-            var notebooksRetrieved = context.Notebooks.Where(n => n.UserId == 1).ToList(); // test only
-            this.Notebooks.Clear();
-            foreach (var item in notebooksRetrieved) this.Notebooks.Add(item);
+            if (App.UserId != 0)
+            {
+                var notebooksRetrieved = context.Notebooks.Where(n => n.UserId == App.UserId).ToList(); // test only
+                this.Notebooks.Clear();
+                foreach (var item in notebooksRetrieved) this.Notebooks.Add(item);
+            }
+            else this.Notebooks.Clear();
+
         }
         public void ReadNotes() {
             if (SelectedNotebook != null){

@@ -13,5 +13,6 @@ namespace NotesApp
     /// </summary>
     public partial class App : Application
     {
+        public static int UserId = 0;
     }
 }

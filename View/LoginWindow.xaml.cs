@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NotesApp.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,32 @@ namespace NotesApp.View
         public LoginWindow()
         {
             InitializeComponent();
+            LoginVM vm = new LoginVM();
+            containerGrid.DataContext = vm;
+            vm.HasLoggedIn += Vm_HasLoggedIn;
+        }
+
+        private void Vm_HasLoggedIn(object sender, EventArgs e)
+        {
+            this.Close();
+
+        }
+        protected override void OnClosed(EventArgs e)
+        {
+
+            base.OnClosed(e);
+        }
+
+        private void btnRegLogin_Click(object sender, RoutedEventArgs e)
+        {
+            registerStackPanel.Visibility = Visibility.Collapsed;
+            loginStackPanel.Visibility = Visibility.Visible;
+        }
+
+        private void btnLoginReg_Click(object sender, RoutedEventArgs e)
+        {
+            loginStackPanel.Visibility = Visibility.Collapsed;
+            registerStackPanel.Visibility = Visibility.Visible;
         }
     }
 }
