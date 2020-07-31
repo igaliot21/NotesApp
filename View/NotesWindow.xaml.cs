@@ -1,6 +1,8 @@
-﻿using NotesApp.ViewModel;
+﻿using NotesApp.Model;
+using NotesApp.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
@@ -32,6 +34,7 @@ namespace NotesApp.View
             InitializeComponent();
             notesVM = new NotesVM();
             mainContainer.DataContext = notesVM;
+            notesVM.SelectedNoteChanged += NotesVM_SelectedNoteChanged;
             /*
             var currentCulture = from r in SpeechRecognitionEngine.InstalledRecognizers()
                                  where r.Culture.Equals(Thread.CurrentThread.CurrentCulture)
@@ -53,7 +56,16 @@ namespace NotesApp.View
 
         }
 
-        
+        private void NotesVM_SelectedNoteChanged(object sender, EventArgs e)
+        {
+            richTxtContent.Document.Blocks.Clear();
+            if ((!string.IsNullOrEmpty(notesVM.SelectedNote.FileLocation) && notesVM.SelectedNote.FileLocation != "FileLocation")) {
+                FileStream fileStream = new FileStream(notesVM.SelectedNote.FileLocation, FileMode.Open);
+                TextRange range = new TextRange(richTxtContent.Document.ContentStart, richTxtContent.Document.ContentEnd);
+                range.Load(fileStream, DataFormats.Rtf);
+            }    
+        }
+
         protected override void OnActivated(EventArgs e)
         {
             if (App.UserId == 0)
@@ -141,6 +153,22 @@ namespace NotesApp.View
         {
             if (!string.IsNullOrEmpty(cmbFontSize.Text))
                 richTxtContent.Selection.ApplyPropertyValue(Inline.FontSizeProperty, cmbFontSize.Text);
+        }
+
+        private void btnSaveNote_Click(object sender, RoutedEventArgs e)
+        {
+            string rtfFile = string.Empty;
+            if (notesVM.SelectedNote.FileLocation == "FileLocation"){
+                rtfFile = System.IO.Path.Combine(Environment.CurrentDirectory, $"{notesVM.SelectedNote.Id}.rtf");
+                notesVM.SelectedNote.FileLocation = rtfFile;
+            }
+            else rtfFile = notesVM.SelectedNote.FileLocation;
+
+            var fileStream = new FileStream(rtfFile, FileMode.Create);
+            var range = new TextRange(richTxtContent.Document.ContentStart, richTxtContent.Document.ContentEnd);
+            range.Save(fileStream, DataFormats.Rtf);
+
+            notesVM.UpdatedSelectedNote();
         }
     }
 }
