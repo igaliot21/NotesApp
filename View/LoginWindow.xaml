@@ -9,20 +9,45 @@
         Title="Login" Height="320" Width="250" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
     <Window.Resources>
         <vm:LoginVM x:Key="login" />
+        <Storyboard x:Key="MoveUp">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="button">
+                <EasingDoubleKeyFrame KeyTime="0" Value="10"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.8" Value="2"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="button">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.8" Value="0.67"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
     </Window.Resources>
-    <Grid x:Name="containerGrid">   
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource MoveUp}"/>
+        </EventTrigger>
+    </Window.Triggers>
+    <Grid x:Name="containerGrid">
         <StackPanel x:Name="loginStackPanel"
                     Margin="20, 0" 
-                    Visibility="Collapsed"                    
                     VerticalAlignment="Center">
             <Label Content="Email/Login:" FontSize="10"/>
             <TextBox Text="{Binding User.Login, Mode=TwoWay}" />
             <Label Content="Password:" FontSize="10"/>
             <TextBox Text="{Binding User.Password, Mode=TwoWay}" />
-            <Button Content="Login" 
+            <Button x:Name="button" Content="Login" 
                     Command="{Binding LoginCommand}"
                     CommandParameter="{Binding User}"
-                    Margin="0 15 0 0"/>
+                    Margin="0 15 0 0" RenderTransformOrigin="0.5,0.5">
+                <Button.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Button.RenderTransform>
+            </Button>
             <Button x:Name="btnLoginReg" Content="Register" 
                     Width="100" HorizontalAlignment="Right"
                     Click="btnLoginReg_Click"
@@ -31,6 +56,7 @@
         </StackPanel>
         <StackPanel x:Name="registerStackPanel"
                     Margin="20, 0" 
+                    Visibility="Collapsed"
                     VerticalAlignment="Center">
             <Label Content="Name:" FontSize="10"/>
             <TextBox Text="{Binding User.Name, Mode=TwoWay}" />
@@ -48,8 +74,8 @@
             <Button x:Name="btnRegLogin" Content="Login" 
                     Width="100" HorizontalAlignment="Right"
                     Click="btnRegLogin_Click"
-                    Margin="0 20 0 0"/>            
-           
+                    Margin="0 20 0 0"/>
+
         </StackPanel>
     </Grid>
 </Window>
