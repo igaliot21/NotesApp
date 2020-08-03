@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,8 @@ namespace NotesApp.ViewModel
         private bool isediting;
         private Notebook selectedNotebook;
         private Note selectedNote;
+        private ObservableCollection<Notebook> notebooks;
+        private ObservableCollection<Note> notes;
 
         public string UserName
         {
@@ -42,6 +45,7 @@ namespace NotesApp.ViewModel
             {
                 selectedNotebook = value;
                 ReadNotes();
+                OnPropertyChange("SelectedNotebook");
             }
         }
         public Note SelectedNote
@@ -51,15 +55,25 @@ namespace NotesApp.ViewModel
             {
                 selectedNote = value;
                 SelectedNoteChanged(this, new EventArgs());
+                OnPropertyChange("SelectedNote");
             }
         }
 
-        public ObservableCollection<Notebook> Notebooks { get; set; }
+        public ObservableCollection<Notebook> Notebooks {
+            get { return this.notebooks; }
+            set {
+                this.notebooks = value;
+                OnPropertyChange("Notebooks");
+            } 
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler SelectedNoteChanged;
 
-        public ObservableCollection<Note> Notes { get; set; }
+        public ObservableCollection<Note> Notes {
+            get { return this.notes; }
+            set { this.notes = value; } 
+        }
         public NewNotebookCommand NewNotebookCmd { get; set; }
         public NewNoteCommand NewNoteCmd { get; set; }
         public BeginEditCommand BeginEditCmd { get; set; }
@@ -101,8 +115,8 @@ namespace NotesApp.ViewModel
         public void ReadNotebooks(){
             if (App.UserId != 0)
             {
-                var notebooksRetrieved = context.Notebooks.Where(n => n.UserId == App.UserId).ToList();
                 this.Notebooks.Clear();
+                var notebooksRetrieved = context.Notebooks.Where(n => n.UserId == App.UserId).ToList();
                 foreach (var item in notebooksRetrieved) this.Notebooks.Add(item);
             }
             else this.Notebooks.Clear();
@@ -118,12 +132,12 @@ namespace NotesApp.ViewModel
         public void StartEditing() {
             IsEditing = true;
         }
-        public void HasRenamed(Notebook notebook) { 
+        public async void HasRenamed(Notebook notebook) { 
             if(notebook != null){
-                var notebookToedit = context.Notebooks.Where(n => n.Id == notebook.Id).Single();
+                var notebookToedit = await context.Notebooks.Where(n => n.Id == notebook.Id).SingleAsync(); ;
                 notebookToedit.Name = notebook.Name;
                 context.Notebooks.AddOrUpdate(notebookToedit);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
                 IsEditing = false;
                 ReadNotebooks();
             }
