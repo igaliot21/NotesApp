@@ -9,7 +9,7 @@
         xmlns:uc="clr-namespace:NotesApp.View.UserControls"
         xmlns:cv="clr-namespace:NotesApp.ViewModel.Converters"
         mc:Ignorable="d"
-        Title="Notes" Height="480" Width="600">
+        Title="Notes" Height="480" Width="600" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <vm:NotesVM x:Key="NotesVM" />
         <cv:BoolToVisibility x:Key="boolToVis" />
