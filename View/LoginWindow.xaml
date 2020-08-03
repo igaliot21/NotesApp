@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:NotesApp.View"
         xmlns:vm="clr-namespace:NotesApp.ViewModel"
         mc:Ignorable="d"
-        Title="Login" Height="320" Width="250" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+        Title="Login" Height="320" Width="250" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Icon="icon.ico">
     <Window.Resources>
         <vm:LoginVM x:Key="login" />
         <Storyboard x:Key="MoveUp">
