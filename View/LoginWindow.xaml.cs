@@ -31,11 +31,10 @@ namespace NotesApp.View
         private void Vm_HasLoggedIn(object sender, EventArgs e)
         {
             this.Close();
-
         }
+
         protected override void OnClosed(EventArgs e)
         {
-
             base.OnClosed(e);
         }
 
